@@ -1,17 +1,56 @@
+<ion-menu side="end" contentId="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item (click)="removeAllItems()" [disabled]="shoppingService.isEmpty">
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        <ion-label>Eliminar todos los items</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Mi lista de la compra
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" id="content">
+  <ion-item class="ion-text-center" lines="none"  *ngIf="shoppingService.isEmpty">
+    <ion-label>No hay elementos en tu lista</ion-label>
+  </ion-item>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-list *ngIf="!shoppingService.isEmpty">
+    <ion-reorder-group [disabled]="false" (ionItemReorder)="onReorderItems($event)">
+      <ion-item-sliding *ngFor="let item of shoppingService.items">
+        <ion-item >
+          <ion-label>{{item}}</ion-label>
+          <ion-reorder *ngIf="shoppingService.items.length > 1"></ion-reorder>
+        </ion-item>
+  
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="removeItem(item)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-reorder-group>
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>
